@@ -3,6 +3,8 @@ import string
 
 import requests
 
+from faker import Faker
+
 from data import BASE_URL, LOGIN_COURIER_PATH, DELETE_COURIER_PATH
 
 
@@ -34,3 +36,20 @@ class Helpers:
             credentials['first_name'] = Helpers.generate_random_string(10)
 
         return credentials
+
+    @staticmethod
+    def generate_order():
+        fake = Faker('ru_RU')
+        address = random.choices(['Каляева, 13', 'Пушкина, 462', 'Мира, 174'])
+        order = {
+            "firstName": fake.first_name(),
+            "lastName": fake.last_name(),
+            "address": ''.join(address),
+            "metroStation": random.randint(1, 224),
+            "phone": fake.phone_number(),
+            "rentTime": random.randint(1, 7),
+            "deliveryDate": f'2024-{random.randint(1, 12)}-{random.randint(1, 28)}',
+            "comment": Helpers.generate_random_string(20)
+        }
+
+        return order
