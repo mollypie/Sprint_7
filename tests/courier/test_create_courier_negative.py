@@ -10,7 +10,7 @@ class TestCreateCourierNegative:
 
         assert courier_1.status_code == 201 and courier_2.status_code == 409
 
-        Helpers.delete_courier(payload["login"], payload["password"])
+        Helpers.delete_courier(payload)
 
     def test_create_courier_without_password(self):
         payload = Helpers.generate_courier(login=True)

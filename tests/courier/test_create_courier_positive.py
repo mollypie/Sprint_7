@@ -9,7 +9,7 @@ class TestCreateCourierPositive:
 
         assert response.status_code == 201 and response.text == TEXT_SUCCESS_TRUE
 
-        Helpers.delete_courier(payload["login"], payload["password"])
+        Helpers.delete_courier(payload)
 
     def test_create_courier_without_first_name(self):
         payload = Helpers.generate_courier(login=True, password=True)
@@ -17,4 +17,4 @@ class TestCreateCourierPositive:
 
         assert response.status_code == 201 and response.text == TEXT_SUCCESS_TRUE
 
-        Helpers.delete_courier(payload["login"], payload["password"])
+        Helpers.delete_courier(payload)

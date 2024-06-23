@@ -14,12 +14,8 @@ class Helpers:
         return random_string
 
     @staticmethod
-    def delete_courier(login, password):
-        payload2 = {
-            "login": login,
-            "password": password
-        }
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload2)
+    def delete_courier(payload):
+        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload)
         courier_id = response.json()
         response_delete = requests.delete(BASE_URL + DELETE_COURIER_PATH + str(courier_id['id']))
         assert response_delete.status_code == 200
