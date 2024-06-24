@@ -2,23 +2,23 @@ import requests
 
 from conftest import *
 from data import *
-from main.courier.helpers import Helpers
+from main.courier.helpers_courier import HelpersCourier
 
 
 class TestCreateCourierPositive:
 
     def test_create_courier_with_first_name(self):
-        payload = Helpers.generate_courier(login=True, password=True, first_name=True)
+        payload = HelpersCourier.generate_courier(login=True, password=True, first_name=True)
         response = requests.post(BASE_URL + CREATE_COURIER_PATH, data=payload)
 
         assert response.status_code == 201 and response.text == TEXT_SUCCESS_TRUE
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)
 
     def test_create_courier_without_first_name(self):
-        payload = Helpers.generate_courier(login=True, password=True)
+        payload = HelpersCourier.generate_courier(login=True, password=True)
         response = requests.post(BASE_URL + CREATE_COURIER_PATH, data=payload)
 
         assert response.status_code == 201 and response.text == TEXT_SUCCESS_TRUE
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)

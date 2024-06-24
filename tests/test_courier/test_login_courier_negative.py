@@ -6,7 +6,7 @@ import requests
 from conftest import *
 from data import *
 from main.courier.create_new_courier import register_new_courier_and_return_login_password
-from main.courier.helpers import Helpers
+from main.courier.helpers_courier import HelpersCourier
 
 
 class TestLoginCourierNegative:
@@ -23,7 +23,7 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 400 and response.text == TEXT_REQUIRED_DATA_LOGIN
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)
 
     @pytest.mark.parametrize(
         "login",
@@ -38,7 +38,7 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 400 and response.text == TEXT_REQUIRED_DATA_LOGIN
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)
 
     @pytest.mark.parametrize(
         "password",
@@ -54,7 +54,7 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 404 and response.text == TEXT_ACCOUNT_NOT_FOUND
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)
 
     @pytest.mark.parametrize(
         "login",
@@ -70,4 +70,4 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 404 and response.text == TEXT_ACCOUNT_NOT_FOUND
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)

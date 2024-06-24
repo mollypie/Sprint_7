@@ -5,7 +5,7 @@ import requests
 from conftest import *
 from data import *
 from main.courier.create_new_courier import register_new_courier_and_return_login_password
-from main.courier.helpers import Helpers
+from main.courier.helpers_courier import HelpersCourier
 
 
 class TestLoginCourierPositive:
@@ -16,4 +16,4 @@ class TestLoginCourierPositive:
 
         assert response.status_code == 200 and 'id' in response.json()
 
-        Helpers.delete_courier(payload)
+        HelpersCourier.delete_courier(payload)

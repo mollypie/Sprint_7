@@ -1,3 +1,4 @@
+import json
 import random
 import string
 
@@ -8,7 +9,7 @@ from faker import Faker
 from data import BASE_URL, LOGIN_COURIER_PATH, DELETE_COURIER_PATH
 
 
-class Helpers:
+class HelpersCourier:
     @staticmethod
     def generate_random_string(length):
         letters = string.ascii_lowercase
@@ -16,10 +17,21 @@ class Helpers:
         return random_string
 
     @staticmethod
+    def register_courier(payload):
+        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload)
+        courier_id = response.json()
+        return courier_id['id']
+
+    @staticmethod
     def delete_courier(payload):
         response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload)
         courier_id = response.json()
-        response_delete = requests.delete(BASE_URL + DELETE_COURIER_PATH + str(courier_id['id']))
+        response_delete = requests.delete(BASE_URL + DELETE_COURIER_PATH + str(courier_id))
+        assert response_delete.status_code == 200
+
+    @staticmethod
+    def delete_courier1(courier_id):
+        response_delete = requests.delete(BASE_URL + DELETE_COURIER_PATH + str(courier_id))
         assert response_delete.status_code == 200
 
     @staticmethod
@@ -27,13 +39,13 @@ class Helpers:
         credentials = {}
 
         if login:
-            credentials['login'] = Helpers.generate_random_string(10)
+            credentials['login'] = HelpersCourier.generate_random_string(10)
 
         if password:
-            credentials['password'] = Helpers.generate_random_string(10)
+            credentials['password'] = HelpersCourier.generate_random_string(10)
 
         if first_name:
-            credentials['first_name'] = Helpers.generate_random_string(10)
+            credentials['first_name'] = HelpersCourier.generate_random_string(10)
 
         return credentials
 
@@ -49,7 +61,7 @@ class Helpers:
             "phone": fake.phone_number(),
             "rentTime": random.randint(1, 7),
             "deliveryDate": f'2024-{random.randint(1, 12)}-{random.randint(1, 28)}',
-            "comment": Helpers.generate_random_string(20)
+            "comment": HelpersCourier.generate_random_string(20)
         }
 
         return order
