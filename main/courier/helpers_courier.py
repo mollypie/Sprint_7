@@ -1,12 +1,5 @@
-import json
 import random
 import string
-
-import requests
-
-from faker import Faker
-
-from data import BASE_URL, LOGIN_COURIER_PATH, DELETE_COURIER_PATH
 
 
 class HelpersCourier:
@@ -17,25 +10,7 @@ class HelpersCourier:
         return random_string
 
     @staticmethod
-    def register_courier(payload):
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload)
-        courier_id = response.json()
-        return courier_id['id']
-
-    @staticmethod
-    def delete_courier(payload):
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload)
-        courier_id = response.json()
-        response_delete = requests.delete(BASE_URL + DELETE_COURIER_PATH + str(courier_id))
-        assert response_delete.status_code == 200
-
-    @staticmethod
-    def delete_courier1(courier_id):
-        response_delete = requests.delete(BASE_URL + DELETE_COURIER_PATH + str(courier_id))
-        assert response_delete.status_code == 200
-
-    @staticmethod
-    def generate_courier(login=False, password=False, first_name=False):
+    def generate_credentials(login=False, password=False, first_name=False):
         credentials = {}
 
         if login:
@@ -50,18 +25,8 @@ class HelpersCourier:
         return credentials
 
     @staticmethod
-    def generate_order():
-        fake = Faker('ru_RU')
-        address = random.choices(['Каляева, 13', 'Пушкина, 462', 'Мира, 174'])
-        order = {
-            "firstName": fake.first_name(),
-            "lastName": fake.last_name(),
-            "address": ''.join(address),
-            "metroStation": random.randint(1, 224),
-            "phone": fake.phone_number(),
-            "rentTime": random.randint(1, 7),
-            "deliveryDate": f'2024-{random.randint(1, 12)}-{random.randint(1, 28)}',
-            "comment": HelpersCourier.generate_random_string(20)
-        }
+    def generate_credentials_with_another_password(credentials):
+        password = HelpersCourier.generate_random_string(10)
+        credentials_with_another_password = {'login': credentials['login'], 'password': password}
 
-        return order
+        return credentials_with_another_password

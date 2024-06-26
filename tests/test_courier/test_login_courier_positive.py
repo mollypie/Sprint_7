@@ -1,19 +1,11 @@
-import json
-
-import requests
-
 from conftest import *
-from data import *
-from main.courier.create_new_courier import register_new_courier_and_return_login_password
-from main.courier.helpers_courier import HelpersCourier
+
+from main.courier.requests_courier import RequestsCourier
 
 
 class TestLoginCourierPositive:
 
-    def test_login_courier_with_valid_credentials(self):
-        payload = register_new_courier_and_return_login_password()
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=payload)
+    def test_login_courier_with_valid_credentials(self, create_courier):
+        response = RequestsCourier.login_courier(create_courier)
 
         assert response.status_code == 200 and 'id' in response.json()
-
-        HelpersCourier.delete_courier(payload)

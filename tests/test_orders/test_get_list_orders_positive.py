@@ -1,38 +1,24 @@
-import json
-
-
-import requests
-from unittest.mock import Mock
-from unittest.mock import patch
 from conftest import *
-from data import *
-from main.courier.create_new_courier import register_new_courier_and_return_login_password
-from main.courier.helpers_courier import HelpersCourier
+
 from main.orders.helpers_orders import HelpersOrders
+from main.orders.requests_orders import RequestsOrders
 
 
 class TestGetListOrdersPositive:
 
-    def test_create_order_with_courier_id(self, courier):
-        payload = {'courierId': courier}
-        response = requests.get(BASE_URL + ORDERS_PATH, params=payload)
+    def test_get_list_orders_with_courier_id(self, courier_with_order):
+        parameters = HelpersOrders.generate_parameters_with_courier_id(courier_with_order)
+        response = RequestsOrders.get_orders(parameters)
 
-        assert response.status_code == 200
+        orders = response.json()['orders']
 
-    def test_create_order_with_courier_id_and_nearest_station(self, courier):
-        payload = {'courierId': courier, 'nearestStation': HelpersOrders.generate_nearest_station()}
-        response = requests.get(BASE_URL + ORDERS_PATH, params=payload)
+        assert (response.status_code == 200
+                and all(courier_with_order == order.get("courierId") for order in orders))
 
-        assert response.status_code == 200
+    def test_get_list_orders_with_limit_and_page(self):
+        parameters = HelpersOrders.generate_parameters_with_limit_and_page()
+        response = RequestsOrders.get_orders(parameters)
 
-    def test_create_order_with_limit_and_page(self):
-        payload = HelpersOrders.generate_parameters_with_limit_and_page()
-        response = requests.get(BASE_URL + ORDERS_PATH, params=payload)
+        orders = response.json()['orders']
 
-        assert response.status_code == 200
-
-    def test_create_order_with_limit_and_page_and_nearest_station(self):
-        payload = HelpersOrders.generate_parameters_with_limit_and_page_and_nearest_station()
-        response = requests.get(BASE_URL + ORDERS_PATH, params=payload)
-
-        assert response.status_code == 200
+        assert (response.status_code == 200 and len(orders) == 10)

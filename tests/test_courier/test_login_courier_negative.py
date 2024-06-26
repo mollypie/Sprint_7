@@ -1,73 +1,58 @@
-import json
-
-import pytest
-import requests
+from conftest import create_courier
 
 from conftest import *
 from data import *
-from main.courier.create_new_courier import register_new_courier_and_return_login_password
 from main.courier.helpers_courier import HelpersCourier
+from main.courier.requests_courier import RequestsCourier
 
 
 class TestLoginCourierNegative:
     @pytest.mark.parametrize(
-        "password",
+        'password',
         [
             None,
-            ""
+            ''
         ]
     )
-    def test_login_courier_with_invalid_password(self, password):
-        payload = register_new_courier_and_return_login_password()
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data={"login": payload["login"], "password": password})
+    def test_login_courier_with_invalid_password(self, create_courier, password):
+        response = RequestsCourier.login_courier({'login': create_courier['login'], 'password': password})
 
         assert response.status_code == 400 and response.text == TEXT_REQUIRED_DATA_LOGIN
 
-        HelpersCourier.delete_courier(payload)
-
     @pytest.mark.parametrize(
-        "login",
+        'login',
         [
             None,
-            ""
+            ''
         ]
     )
-    def test_login_courier_with_invalid_login(self, login):
-        payload = register_new_courier_and_return_login_password()
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data={"login": login, "password": payload["password"]})
+    def test_login_courier_with_invalid_login(self, create_courier, login):
+        response = RequestsCourier.login_courier({'login': login, 'password': create_courier['password']})
 
         assert response.status_code == 400 and response.text == TEXT_REQUIRED_DATA_LOGIN
 
-        HelpersCourier.delete_courier(payload)
-
     @pytest.mark.parametrize(
-        "password",
+        'password',
         [
-            "vbvb1",
-            " ",
+            HelpersCourier.generate_random_string(8),
+            ' ',
 
         ]
     )
-    def test_login_courier_with_non_existent_password(self, password):
-        payload = register_new_courier_and_return_login_password()
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data={"login": payload["login"], "password": password})
+    def test_login_courier_with_non_existent_password(self, create_courier, password):
+        response = RequestsCourier.login_courier({'login': create_courier['login'], 'password': password})
 
         assert response.status_code == 404 and response.text == TEXT_ACCOUNT_NOT_FOUND
 
-        HelpersCourier.delete_courier(payload)
-
     @pytest.mark.parametrize(
-        "login",
+        'login',
         [
-            "vbvb1",
-            " ",
+            HelpersCourier.generate_random_string(8),
+            ' ',
 
         ]
     )
-    def test_login_courier_with_non_existent_login(self, login):
-        payload = register_new_courier_and_return_login_password()
-        response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data={"login": login, "password": payload["password"]})
+    def test_login_courier_with_non_existent_login(self, create_courier, login):
+        response = RequestsCourier.login_courier({'login': login, 'password': create_courier['password']})
 
         assert response.status_code == 404 and response.text == TEXT_ACCOUNT_NOT_FOUND
-
-        HelpersCourier.delete_courier(payload)

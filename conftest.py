@@ -1,19 +1,29 @@
 import pytest
-import requests
 
-from data import *
-from main.courier.create_new_courier import register_new_courier_and_return_login_password
-from main.courier.helpers_courier import HelpersCourier
+from main.courier.requests_courier import RequestsCourier
+from main.orders.helpers_orders import HelpersOrders
+from main.orders.requests_orders import RequestsOrders
 
 
 @pytest.fixture(scope='class')
-def courier():
-    creds = register_new_courier_and_return_login_password()
+def create_courier():
+    credentials = RequestsCourier.create_courier_and_get_credential()
 
-    response = requests.post(BASE_URL + LOGIN_COURIER_PATH, data=creds)
-    response_data = response.json()
-    courier_id = response_data['id']
+    yield credentials
+
+    RequestsCourier.delete_courier(credentials)
+
+
+@pytest.fixture(scope='class')
+def courier_with_order():
+    credentials = RequestsCourier.create_courier_and_get_credential()
+    courier_login_response = RequestsCourier.login_courier(credentials)
+    courier_id = courier_login_response.json()['id']
+
+    order_creation_response = RequestsOrders.create_order(HelpersOrders.generate_order())
+    order = RequestsOrders.get_order(HelpersOrders.generate_parameters_with_track_id(order_creation_response.json()['track']))
+    RequestsOrders.accept_order(order.json()['order']['id'], courier_id)
 
     yield courier_id
 
-    HelpersCourier.delete_courier1(courier_id)
+    RequestsCourier.delete_courier(credentials)
