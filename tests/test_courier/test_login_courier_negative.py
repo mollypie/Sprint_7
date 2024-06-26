@@ -1,3 +1,5 @@
+import allure
+
 from conftest import create_courier
 
 from conftest import *
@@ -7,6 +9,7 @@ from main.courier.requests_courier import RequestsCourier
 
 
 class TestLoginCourierNegative:
+    @allure.title('Авторизация курьера с невалидным паролем')
     @pytest.mark.parametrize(
         'password',
         [
@@ -19,6 +22,7 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 400 and response.text == TEXT_REQUIRED_DATA_LOGIN
 
+    @allure.title('Авторизация курьера с невалидным логином')
     @pytest.mark.parametrize(
         'login',
         [
@@ -31,6 +35,7 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 400 and response.text == TEXT_REQUIRED_DATA_LOGIN
 
+    @allure.title('Авторизация курьера с несуществующим паролем')
     @pytest.mark.parametrize(
         'password',
         [
@@ -44,6 +49,7 @@ class TestLoginCourierNegative:
 
         assert response.status_code == 404 and response.text == TEXT_ACCOUNT_NOT_FOUND
 
+    @allure.title('Авторизация курьера с несуществующим логином')
     @pytest.mark.parametrize(
         'login',
         [

@@ -5,7 +5,6 @@ from main.courier.helpers_courier import HelpersCourier
 
 
 class RequestsCourier:
-
     @staticmethod
     def create_courier_and_get_credential():
         payload = HelpersCourier.generate_credentials(login=True, password=True)

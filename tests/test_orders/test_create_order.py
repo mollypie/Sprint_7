@@ -1,5 +1,6 @@
 import json
 
+import allure
 import pytest
 import requests
 
@@ -8,7 +9,7 @@ from main.orders.helpers_orders import HelpersOrders
 
 
 class TestCreateOrder:
-
+    @allure.title('Создание заказа')
     @pytest.mark.parametrize(
         'color',
         [
